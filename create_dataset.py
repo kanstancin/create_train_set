@@ -23,6 +23,7 @@ im_names_bckgs = get_img_paths(inp_path_printer)
 infill = InfillAdder(inp_path_infill, inp_path_mask)
 spag = SpagAdder(inp_path_spag, inp_path_mask)
 for i, im_bckg_name in enumerate(im_names_bckgs):
+    if (i == 500): break;
     im_bckg = cv.imread(inp_path_printer + "/" + im_bckg_name, 1)
 
     im_bckg = cv.cvtColor(im_bckg, cv.COLOR_BGR2RGB)
