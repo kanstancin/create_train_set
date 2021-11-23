@@ -131,3 +131,4 @@ dmypy.json
 # real
 data/3d_printers/*
 data/dataset_out/*
+.idea/
