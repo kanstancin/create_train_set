@@ -23,7 +23,7 @@ class InfillAdder:
         if (self.count_frgs == len(self.im_names_frgs)):
             self.im_names_frgs = rnd.shuffle(self.im_names_frgs)
             self.count_frgs = 0
-
+        print(self.im_names_frgs)
         frg_num = rnd.randint(1,len(self.im_names_frgs))
         im_frg = cv.imread(self.inp_path_frg + "/" + self.im_names_frgs[self.count_frgs], cv.IMREAD_UNCHANGED)
         im_frg = cv.cvtColor(im_frg, cv.COLOR_BGRA2RGBA)
