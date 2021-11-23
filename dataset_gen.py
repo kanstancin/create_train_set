@@ -64,8 +64,9 @@ def overlay_img(im_frg, im_bckg):
                                     overlay_coord[1]:overlay_coord[1] + frg_width] = im_frg[:,:,3] >10
     im_bckg[mask!=False] = im_frg[im_frg[:,:,3] >10,:3]
     mask *= 255
-    mask = [mask,mask,mask]
-    mask = np.transpose(mask,(1,2,0))
+    mask = mask.astype("uint8")
+    # mask = [mask,mask,mask]
+    # mask = np.transpose(mask,(1,2,0))
     return im_bckg, mask
 
 def resize_frg(im_frg, im_bckg):
@@ -97,3 +98,45 @@ def process_mask(img):
     img = cv.erode(img,kernel,iterations = 5)
     img = cv.dilate(img,kernel,iterations = 4)
     return img
+
+def get_box_from_mask(mask):
+    # dilate mask
+    kernel = np.ones((15, 15), np.uint8)
+    mask = cv.dilate(mask, kernel, iterations=1)
+    kernel = np.ones((55, 55), np.uint8)
+    mask = cv.morphologyEx(mask, cv.MORPH_CLOSE, kernel)
+
+    # find best cont
+    cnts, _ = cv.findContours(mask.copy(), cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+    # iterate over all the contours.
+    max_len = 0
+    for contour in cnts:
+        if len(contour) > max_len:
+            max_len = len(contour)
+            longest_cont = contour
+    box = cv.boundingRect(longest_cont)
+    print(box)
+    return box
+
+def cv_box_to_yolo(box, im_shape):
+    im_height, im_width = im_shape
+    print("im shape : ", im_shape)
+    [j_min, i_min, width, height] = box
+    x_center = j_min +  width / 2
+    y_center = i_min + height / 2
+    # normalize
+    x_center /= im_width
+    width /= im_width
+    y_center /= im_height
+    height /= im_height
+    yolo_box = [x_center, y_center, width, height]
+    return yolo_box
+
+def save_label(path, im_name, box):
+    box = ' '.join([str(elem) for elem in box])
+    line = "0 " + str(box)
+    print(line)
+    im_name = os.path.splitext(im_name)
+    path = path + "/" + im_name[0] + ".txt"
+    with open(path, 'w') as f:
+        f.write(line)
