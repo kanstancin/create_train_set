@@ -17,7 +17,7 @@ class SpagAdder():
     def __call__(self, im_bckg):
         self.count_frgs += 1
         if (self.count_frgs == len(self.im_names_frgs)):
-            self.im_names_frgs = rnd.shuffle(self.im_names_frgs)
+            rnd.shuffle(self.im_names_frgs)
             self.count_frgs = 0
 
         frg_num = rnd.randint(1, len(self.im_names_frgs))
