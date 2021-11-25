@@ -13,8 +13,8 @@ inp_path_infill = "data/crop"
 # masks, printers, output path
 inp_path_mask = "data/mask/out"
 inp_path_printer = "data/3d_printers"
-labels_path = "data/dataset_out/labels/train"
-out_path_dataset = "data/dataset_out/images/train"
+labels_path = "data/dataset_out/labels"
+imgs_path = "data/dataset_out/images"
 
 # download dataset:
 # aws s3 --no-sign-request sync s3://open-images-dataset/validation [target_dir/validation]
@@ -23,6 +23,8 @@ im_names_bckgs = get_img_paths(inp_path_printer)
 infill = InfillAdder(inp_path_infill, inp_path_mask)
 spag = SpagAdder(inp_path_spag, inp_path_mask)
 for i, im_bckg_name in enumerate(im_names_bckgs):
+    if (i < 400): state = "/train"
+    else: state = "/val"
     if (i == 500): break;
     im_bckg = cv.imread(inp_path_printer + "/" + im_bckg_name, 1)
 
@@ -42,9 +44,11 @@ for i, im_bckg_name in enumerate(im_names_bckgs):
     im_bckg = cv.cvtColor(im_bckg, cv.COLOR_RGB2BGR)
 
     im_out_name = "img" + str(i) + ".jpg"
-    cv.imwrite(out_path_dataset + "/" + im_out_name, im_bckg)
+    imgs_path_full = imgs_path + state + "/" + im_out_name
+    cv.imwrite(imgs_path_full, im_bckg)
 
-    save_label(labels_path, im_out_name, box)
+    labels_path_full = labels_path + state
+    save_label(labels_path_full, im_out_name, box)
 
     plt.imshow(mask)
     plt.show()
