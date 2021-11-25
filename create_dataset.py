@@ -40,7 +40,7 @@ for i, im_bckg_name in enumerate(im_names_bckgs):
     box = get_box_from_mask(mask)
     box = cv_box_to_yolo(box, mask.shape)
 
-
+ 
     im_bckg = cv.cvtColor(im_bckg, cv.COLOR_RGB2BGR)
 
     im_out_name = "img" + str(i) + ".jpg"
