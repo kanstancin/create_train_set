@@ -24,7 +24,7 @@ def apply_spag_transf(im_frg):
     bri = iaa.MultiplyAndAddToBrightness(mul=(0.9, 1.1), add=(-30, 30))
     im_frg = bri(image=im_frg)
     # return alpha ch
-    im_frg = np.concatenate((im_frg,alpha_ch), axis=3)
+    im_frg = np.concatenate((im_frg,alpha_ch), axis=2)
 
     # do transforms
     pc_aff = iaa.PiecewiseAffine(scale=(0.005, 0.013))
