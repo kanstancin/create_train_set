@@ -29,6 +29,7 @@ class SpagAdder():
         mask_num = rnd.randint(1, len(self.im_names_masks))
         im_mask = cv.imread(self.inp_path_mask + "/mask" + str(mask_num) + ".png", 0)
 
+        im_frg = apply_spag_transf(im_frg)
         # resize
         im_frg = resize_frg(im_frg, im_bckg)
         # threshold

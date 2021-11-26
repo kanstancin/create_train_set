@@ -15,8 +15,10 @@ def apply_infill_transf(im_frg):
     return im_frg
 
 def apply_spag_transf(im_frg):
-    hue_sat = iaa.MultiplyHueAndSaturation((0.5, 1.5), per_channel=True)
-    im_frg = hue_sat(image=im_frg)
+    hue = iaa.AddToHue((-50, 50))
+    im_frg = hue(image=im_frg)
+    bri = iaa.MultiplyAndAddToBrightness(mul=(0.9, 1.1), add=(-30, 30))
+    im_frg = bri(image=im_frg)
     pc_aff = iaa.PiecewiseAffine(scale=(0.005, 0.013))
     im_frg = pc_aff(image=im_frg)
     pr_tf = iaa.PerspectiveTransform(scale=(0.03,0.15), keep_size=False)
