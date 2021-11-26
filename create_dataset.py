@@ -40,8 +40,12 @@ for i, im_bckg_name in enumerate(im_names_bckgs):
     box = get_box_from_mask(mask)
     box = cv_box_to_yolo(box, mask.shape)
 
- 
+
     im_bckg = cv.cvtColor(im_bckg, cv.COLOR_RGB2BGR)
+
+    im_bckg = cv.cvtColor(im_bckg, cv.COLOR_RGB2GRAY)
+    im_bckg = [im_bckg,im_bckg,im_bckg]
+    im_bckg = np.transpose(im_bckg,(1,2,0))
 
     im_out_name = "img" + str(i) + ".jpg"
     imgs_path_full = imgs_path + state + "/" + im_out_name

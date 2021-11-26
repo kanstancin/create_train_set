@@ -81,7 +81,7 @@ def overlay_img(im_frg, im_bckg):
     return im_bckg, mask
 
 def resize_frg(im_frg, im_bckg):
-    scale_fct = random.uniform(0.15, 0.45)# 0.1  # percent of original size
+    scale_fct = random.uniform(0.1, 0.45)# 0.1  # percent of original size
     width = int(im_bckg.shape[1] * scale_fct)
     height = int(im_bckg.shape[1] * scale_fct / im_frg.shape[1] * im_frg.shape[0])
     dim = (width, height)
