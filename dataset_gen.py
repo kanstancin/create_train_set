@@ -24,6 +24,7 @@ def apply_spag_transf(im_frg):
     bri = iaa.MultiplyAndAddToBrightness(mul=(0.9, 1.1), add=(-30, 30))
     im_frg = bri(image=im_frg)
     # return alpha ch
+    print(im_frg.shape, alpha_ch.shape)
     im_frg = np.hstack((im_frg,alpha_ch))
 
     # do transforms
