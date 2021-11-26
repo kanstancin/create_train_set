@@ -13,7 +13,7 @@ python train.py --img 640 --batch 16 --epochs 3 \
 
 ### how to predict
 ```bash
-python predict.py --weights 'runs/train/exp3/weights/last.pt' \
+python detect.py --weights 'runs/train/exp3/weights/last.pt' \
 --img 600 \
 --conf 0.15 \
 --iou 0.5 \
