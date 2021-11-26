@@ -34,7 +34,7 @@ class InfillAdder:
         im_mask = cv.resize(im_mask, tuple(np.flip(im_frg.shape[0:2])), interpolation=cv.INTER_NEAREST)
         im_frg[im_mask == 0] = [0, 0, 0, 0]
         # transforms
-        print(im_frg.shape)
+        print("infill ",im_frg.shape)
         im_frg = apply_infill_transf(im_frg)
 
         im_frg = resize_frg(im_frg, im_bckg)
