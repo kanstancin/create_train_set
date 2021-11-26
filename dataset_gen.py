@@ -15,10 +15,18 @@ def apply_infill_transf(im_frg):
     return im_frg
 
 def apply_spag_transf(im_frg):
-    # hue = iaa.AddToHue((-50, 50))
-    # im_frg = hue(image=im_frg)
-    # bri = iaa.MultiplyAndAddToBrightness(mul=(0.9, 1.1), add=(-30, 30))
-    # im_frg = bri(image=im_frg)
+    # extrack alpha ch
+    alpha_ch = im_frg[:,:,3]
+    im_frg = im_frg[:,:,:3]
+    # do transforms without alpha ch
+    hue = iaa.AddToHue((-50, 50))
+    im_frg = hue(image=im_frg)
+    bri = iaa.MultiplyAndAddToBrightness(mul=(0.9, 1.1), add=(-30, 30))
+    im_frg = bri(image=im_frg)
+    # return alpha ch
+    im_frg = np.hstack((im_frg,alpha_ch))
+
+    # do transforms
     pc_aff = iaa.PiecewiseAffine(scale=(0.005, 0.013))
     im_frg = pc_aff(image=im_frg)
     pr_tf = iaa.PerspectiveTransform(scale=(0.03,0.15), keep_size=False)
