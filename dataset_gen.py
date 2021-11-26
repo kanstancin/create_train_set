@@ -16,7 +16,7 @@ def apply_infill_transf(im_frg):
 
 def apply_spag_transf(im_frg):
     # extrack alpha ch
-    alpha_ch = im_frg[:,:,3]
+    alpha_ch = im_frg[:,:,3].reshape((-1,im_frg.shape[1], 1))
     im_frg = im_frg[:,:,:3]
     # do transforms without alpha ch
     hue = iaa.AddToHue((-50, 50))
