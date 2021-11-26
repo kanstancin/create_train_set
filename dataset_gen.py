@@ -14,6 +14,17 @@ def apply_infill_transf(im_frg):
     im_frg = rotate(image=im_frg)
     return im_frg
 
+def apply_spag_transf(im_frg):
+    hue_sat = iaa.MultiplyHueAndSaturation((0.5, 1.5), per_channel=True)
+    im_frg = hue_sat(image=im_frg)
+    pc_aff = iaa.PiecewiseAffine(scale=(0.005, 0.013))
+    im_frg = pc_aff(image=im_frg)
+    pr_tf = iaa.PerspectiveTransform(scale=(0.03,0.15), keep_size=False)
+    im_frg = pr_tf(image=im_frg)
+    rotate = iaa.Affine(rotate=(-90, 90), scale=(1, 1), shear=(-50, 50))
+    im_frg = rotate(image=im_frg)
+    return im_frg
+
 # spaghetti
 def remove_bckg(img_orig):
     img = img_orig
@@ -70,7 +81,7 @@ def overlay_img(im_frg, im_bckg):
     return im_bckg, mask
 
 def resize_frg(im_frg, im_bckg):
-    scale_fct = random.uniform(0.15, 0.35)# 0.1  # percent of original size
+    scale_fct = random.uniform(0.15, 0.55)# 0.1  # percent of original size
     width = int(im_bckg.shape[1] * scale_fct)
     height = int(im_bckg.shape[1] * scale_fct / im_frg.shape[1] * im_frg.shape[0])
     dim = (width, height)
