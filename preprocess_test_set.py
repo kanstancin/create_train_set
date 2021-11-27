@@ -18,8 +18,8 @@ for im_name in im_names:
     img = cv.GaussianBlur(img, (5, 5), cv.BORDER_DEFAULT)
     path_out_full = path_out + "/" + im_name
 
-    im_bckg = cv.cvtColor(im_bckg, cv.COLOR_RGB2GRAY)
-    im_bckg = [im_bckg, im_bckg, im_bckg]
-    im_bckg = np.transpose(im_bckg, (1, 2, 0))
+    img = cv.cvtColor(img, cv.COLOR_RGB2GRAY)
+    img = [img, img, img]
+    img = np.transpose(img, (1, 2, 0))
     cv.imwrite(path_out_full, img)
 
