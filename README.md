@@ -9,6 +9,7 @@ python create_dataset.py
 ```bash
 python train.py --img 640 --batch 16 --epochs 3 \
 --data coco128.yaml --weights yolov5s.pt
+python train.py --img 640 --batch 16 --epochs 30 --data ../create_train_set/yaml/dataset.yaml --weights yolov5s.pt
 ```
 
 ### how to predict
