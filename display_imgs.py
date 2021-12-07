@@ -6,7 +6,7 @@ import cv2
 from glob import glob
 from tqdm import tqdm
 
-files = glob("data/detection_out/*")
+files = glob("../blender_spag_generation/pictures/*") #"data/detection_out/*"
 for _ in range(1):
     row = 3
     col = 3
@@ -23,4 +23,5 @@ for _ in range(1):
         axes[i//col, i%col].imshow(img)
         axes[i // col, i % col].axis('off')
     fig.tight_layout()
+    plt.savefig("blender_spag.png",dpi=500)
     plt.show()
