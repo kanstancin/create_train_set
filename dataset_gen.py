@@ -81,14 +81,22 @@ def overlay_img(im_frg, im_bckg):
     j_over = int((bckg_width - frg_width) * random.uniform(0.0, 1.0))
     overlay_coord = (i_over,j_over)
     mask = np.zeros(im_bckg.shape[:2])
+    spag = im_frg[:,:,3] >50
+    print("ds",spag.shape,mask.shape)
     mask[overlay_coord[0]:overlay_coord[0]+frg_height, \
-                                    overlay_coord[1]:overlay_coord[1] + frg_width] = im_frg[:,:,3] >10
-    im_bckg[mask!=False] = im_frg[im_frg[:,:,3] >10,:3]
+                                    overlay_coord[1]:overlay_coord[1] + frg_width] = spag
+    im_bckg[mask!=False] = im_frg[spag,:3]
     mask *= 255
     mask = mask.astype("uint8")
     # mask = [mask,mask,mask]
     # mask = np.transpose(mask,(1,2,0))
     return im_bckg, mask
+
+def resize_imgs(img, mask, shape):
+    shape = (shape[1], shape[0])
+    img = cv.resize(img, shape, interpolation = cv.INTER_AREA)
+    mask = cv.resize(mask, shape, interpolation=cv.INTER_NEAREST)
+    return img, mask
 
 def resize_frg(im_frg, im_bckg):
     scale_fct = random.uniform(0.1, 0.45)# 0.1  # percent of original size
@@ -98,6 +106,25 @@ def resize_frg(im_frg, im_bckg):
     # resize image
     im_frg = cv.resize(im_frg, dim, interpolation = cv.INTER_AREA)
     return im_frg
+
+def resize_bckg(im_frg, im_bckg):
+    scale_fct = random.uniform(2.22, 7) # 0.1  # percent of original size
+
+    width = int(im_frg.shape[1] * scale_fct)
+    height = int(im_frg.shape[1] * scale_fct / im_bckg.shape[1] * im_bckg.shape[0])
+    dim = (width, height)
+    # resize image
+    im_bckg = cv.resize(im_bckg, dim, interpolation=cv.INTER_AREA)
+    return im_bckg
+
+def crop_frg(im):
+    non_zero = im[:, :, 3].nonzero()
+    i_min, i_max = [np.min(non_zero[0]), np.max(non_zero[0])]
+    j_min, j_max = [np.min(non_zero[1]), np.max(non_zero[1])]
+    print(i_min, i_max )
+    print(j_min, j_max)
+    print(non_zero)
+    return im[i_min:i_max, j_min:j_max]
 
 # mask processing
 def is_inp(img_name):

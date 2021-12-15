@@ -20,23 +20,35 @@ class SpagAdder():
             rnd.shuffle(self.im_names_frgs)
             self.count_frgs = 0
 
-        frg_num = rnd.randint(1, len(self.im_names_frgs))
-        im_name_frg = self.im_names_frgs[frg_num-1]
+        # frg_num = rnd.randint(1, len(self.im_names_frgs))
+        im_name_frg = self.im_names_frgs[self.count_frgs]
         im_frg = cv.imread(self.inp_path_frg + "/" + self.im_names_frgs[self.count_frgs], cv.IMREAD_UNCHANGED)
         im_frg = cv.cvtColor(im_frg, cv.COLOR_BGRA2RGBA)
-        print(im_name_frg)
 
+        print(im_name_frg)
         mask_num = rnd.randint(1, len(self.im_names_masks))
         im_mask = cv.imread(self.inp_path_mask + "/mask" + str(mask_num) + ".png", 0)
 
 
-        im_frg = apply_spag_transf(im_frg)
+        # im_frg = apply_spag_transf(im_frg)
         # resize
-        im_frg = resize_frg(im_frg, im_bckg)
-        # threshold
-        im_frg = remove_bckg(im_frg)
 
+        im_frg = crop_frg(im_frg)
+        bckg_shape = im_bckg.shape
+        im_bckg = resize_bckg(im_frg, im_bckg)
+        print("shapes:", bckg_shape, im_bckg.shape, im_frg.shape)
         im_bckg, mask = overlay_img(im_frg, im_bckg)
+        im_bckg, mask = resize_imgs(im_bckg, mask, bckg_shape)
+
+        # im_frg = resize_frg(im_frg, im_bckg)
+        # threshold
+        # im_frg = remove_bckg(im_frg)
+        # im_bckg, mask = overlay_img(im_frg, im_bckg)
+
+        # fig, axes = plt.subplots(2)
+        # axes[0].imshow(im_frg)
+        # axes[1].imshow(im_bckg)
+        # plt.show()
         return im_bckg, mask
 
 # inp_path_frg = "/home/cstar/Downloads/yandex.com/imgs1"
