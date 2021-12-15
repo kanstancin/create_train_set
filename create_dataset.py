@@ -5,14 +5,14 @@ from add_infill import InfillAdder
 from dataset_gen import *
 
 # spag paths
-inp_path_spag = "/home/cstar/workspace/data/spag_blender_imgs"
+inp_path_spag = "/home/ubuntu/workspace/spag_blender_imgs"
 
 # infill paths
 inp_path_infill = "data/crop"
 
 # masks, printers, output path
 inp_path_mask = "data/mask/out"
-inp_path_printer = "/home/cstar/workspace/data/bckg_imgs"
+inp_path_printer = "/home/ubuntu/workspace/bckg_imgs"
 labels_path = "data/dataset_out/labels"
 imgs_path = "data/dataset_out/images"
 
