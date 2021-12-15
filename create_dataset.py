@@ -12,7 +12,7 @@ inp_path_infill = "data/crop"
 
 # masks, printers, output path
 inp_path_mask = "data/mask/out"
-inp_path_printer = "/home/ubuntu/workspace/bckg_imgs"
+inp_path_printer = "/home/ubuntu/workspace/3d_printers"
 labels_path = "data/dataset_out/labels"
 imgs_path = "data/dataset_out/images"
 
