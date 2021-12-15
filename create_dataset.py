@@ -12,7 +12,7 @@ inp_path_infill = "data/crop"
 
 # masks, printers, output path
 inp_path_mask = "data/mask/out"
-inp_path_printer = "/home/ubuntu/workspace/3d_printers"
+inp_path_printer = "/home/ubuntu/workspace/create_train_set/data/3d_printers"
 labels_path = "data/dataset_out/labels"
 imgs_path = "data/dataset_out/images"
 
@@ -23,9 +23,10 @@ im_names_bckgs = get_img_paths(inp_path_printer)
 infill = InfillAdder(inp_path_infill, inp_path_mask)
 spag = SpagAdder(inp_path_spag, inp_path_mask)
 for i, im_bckg_name in enumerate(im_names_bckgs):
-    if (i < 400): state = "/train"
+    print("*"*30+"\n", i)
+    if (i < 800): state = "/train"
     else: state = "/val"
-    if (i == 500): break;
+    if (i == 1000): break;
     im_bckg = cv.imread(inp_path_printer + "/" + im_bckg_name, 1)
 
     im_bckg = cv.cvtColor(im_bckg, cv.COLOR_BGR2RGB)
