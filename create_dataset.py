@@ -6,6 +6,7 @@ from dataset_gen import *
 
 # spag paths
 inp_path_spag = "/home/ubuntu/workspace/spag_blender_imgs"
+# inp_path_spag = "/home/cstar/workspace/data/spag_blender_imgs"
 
 # infill paths
 inp_path_infill = "data/crop"
@@ -13,6 +14,7 @@ inp_path_infill = "data/crop"
 # masks, printers, output path
 inp_path_mask = "data/mask/out"
 inp_path_printer = "/home/ubuntu/workspace/create_train_set/data/3d_printers"
+# inp_path_printer = "/home/cstar/workspace/data/bckg_imgs"
 labels_path = "data/dataset_out/labels"
 imgs_path = "data/dataset_out/images"
 
@@ -35,9 +37,9 @@ for i, im_bckg_name in enumerate(im_names_bckgs):
     im_bckg = infill(im_bckg)
 
     # add spag
-    try:
-        im_bckg, mask = spag(im_bckg)
-    except: continue;
+    # try:
+    im_bckg, mask = spag(im_bckg)
+    # except: continue;
     # im_bckg = cv.GaussianBlur(im_bckg, (5, 5), cv.BORDER_DEFAULT)
 
     box = get_box_from_mask(mask)
