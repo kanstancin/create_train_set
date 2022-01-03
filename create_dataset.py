@@ -5,7 +5,7 @@ from add_infill import InfillAdder
 from dataset_gen import *
 
 # spag paths
-inp_path_spag = "/home/ubuntu/workspace/spag_blender_imgs"
+inp_path_spag = "/home/ubuntu/workspace/spag_blender_imgs_v2"
 # inp_path_spag = "/home/cstar/workspace/data/spag_blender_imgs"
 
 # infill paths
