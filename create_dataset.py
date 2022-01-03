@@ -49,7 +49,9 @@ for i, im_bckg_name in enumerate(im_names_bckgs):
     box = cv_box_to_yolo(box, mask.shape)
     # plt.imshow(im_bckg)
     # plt.show()
-
+    print("b shape ", im_bckg.shape)
+    plt.imshow(im_bckg)
+    plt.show()
     im_bckg = cv.cvtColor(im_bckg, cv.COLOR_RGB2BGR)
 
     # create grayscale
@@ -59,7 +61,8 @@ for i, im_bckg_name in enumerate(im_names_bckgs):
 
     im_out_name = "img" + str(i) + ".jpg"
     imgs_path_full = imgs_path + state + "/" + im_out_name
-    im_bckg = cv.GaussianBlur(im_bckg, (3, 3), cv.BORDER_DEFAULT)
+    # im_bckg = cv.GaussianBlur(im_bckg, (3, 3), cv.BORDER_DEFAULT)
+
     cv.imwrite(imgs_path_full, im_bckg)
 
     labels_path_full = labels_path + state

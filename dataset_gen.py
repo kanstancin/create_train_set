@@ -73,11 +73,10 @@ def remove_bckg(img_orig):
     return img_orig
 
 def overlay_img(im_frg, im_bckg):
-    if im_frg.shape[0] > im_bckg.shape[0]:
-        im_frg = im_frg[:im_bckg.shape[0], :]
-    mask = np.zeros(im_bckg.shape[:2])
-    spag = im_frg[:, :, 3] > 50
-    print("ds", spag.shape, mask.shape)
+    # if im_frg.shape[0] > im_bckg.shape[0]:
+    #     im_frg = im_frg[:im_bckg.shape[0], :]
+
+    # find overlay coordinate
     frg_width = im_frg.shape[1]
     frg_height = im_frg.shape[0]
     bckg_width = im_bckg.shape[1]
@@ -85,14 +84,28 @@ def overlay_img(im_frg, im_bckg):
     i_over = int((bckg_height - frg_height) * random.uniform(0.0, 1.0))
     j_over = int((bckg_width - frg_width) * random.uniform(0.0, 1.0))
     overlay_coord = (i_over, j_over)
-    mask[overlay_coord[0]:overlay_coord[0]+frg_height, \
-                                    overlay_coord[1]:overlay_coord[1] + frg_width] = spag
-    im_bckg[mask!=False] = im_frg[spag,:3]
-    mask *= 255
-    mask = mask.astype("uint8")
-    # mask = [mask,mask,mask]
-    # mask = np.transpose(mask,(1,2,0))
-    return im_bckg, mask
+    # prepare foreground for overlay, i.e. make same shape
+    im_frg_full = np.zeros([im_bckg.shape[0], im_bckg.shape[1], 4])
+    im_frg_full[overlay_coord[0]:overlay_coord[0] + frg_height,
+                overlay_coord[1]:overlay_coord[1] + frg_width] = im_frg[:, :, :]
+    # create mask
+    alpha_mask = im_frg_full[:, :, 3]
+    alpha_mask[alpha_mask > 190] = alpha_mask[alpha_mask > 190] * 2
+    alpha_mask = alpha_mask / np.max(alpha_mask)
+    alpha_mask = np.array([alpha_mask, alpha_mask, alpha_mask]).transpose(1, 2, 0)
+    # display for debug
+    # import matplotlib.pyplot as plt
+    # plt.imshow(alpha_mask)
+    # plt.show()
+    # plt.imshow(im_frg)
+    # plt.show()
+    # overlay images
+    im_bckg = (im_bckg * (1 - alpha_mask) + im_frg_full[:, :, :3] * alpha_mask).astype("uint8")
+    # covert mask to binary format
+    alpha_mask = (alpha_mask[:, :, 0] > 0.1) * 255
+    alpha_mask = alpha_mask.astype("uint8")
+    return im_bckg, alpha_mask
+
 
 def resize_imgs(img, mask, shape):
     shape = (shape[1], shape[0])
