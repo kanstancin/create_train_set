@@ -132,8 +132,12 @@ def resize_bckg(im_frg, im_bckg):
     upper_width_limit = 12000
     if (width > upper_width_limit) or (height > upper_width_limit):
         print("\nLIMIT\n")
-        width = upper_width_limit
-        height = int((upper_width_limit / im_bckg.shape[1]) * im_bckg.shape[0])
+        if width > height:
+            width = upper_width_limit
+            height = int((upper_width_limit / im_bckg.shape[1]) * im_bckg.shape[0])
+        else:
+            height = upper_width_limit
+            width = int((upper_width_limit / im_bckg.shape[0]) * im_bckg.shape[1])
     dim = (width, height)
     # resize image
     im_bckg = cv.resize(im_bckg, dim, interpolation=cv.INTER_AREA)
