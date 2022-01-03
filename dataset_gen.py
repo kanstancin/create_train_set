@@ -129,7 +129,7 @@ def resize_bckg(im_frg, im_bckg):
     width = int(im_frg.shape[1] * scale_fct)
     height = int(im_frg.shape[1] * scale_fct / im_bckg.shape[1] * im_bckg.shape[0])
 
-    upper_width_limit = 8000
+    upper_width_limit = 12000
     if (width > upper_width_limit) or (height > upper_width_limit):
         print("\nLIMIT\n")
         width = upper_width_limit
