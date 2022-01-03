@@ -37,9 +37,12 @@ for i, im_bckg_name in enumerate(im_names_bckgs):
     im_bckg = infill(im_bckg)
 
     # add spag
-    # try:
-    im_bckg, mask = spag(im_bckg)
-    # except: continue;
+    try:
+        im_bckg, mask = spag(im_bckg)
+    except:
+        print("\nERROR\n")
+        continue
+
     # im_bckg = cv.GaussianBlur(im_bckg, (5, 5), cv.BORDER_DEFAULT)
 
     box = get_box_from_mask(mask)
