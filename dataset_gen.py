@@ -118,6 +118,12 @@ def resize_frg(im_frg, im_bckg):
     scale_fct = random.uniform(0.1, 0.45)# 0.1  # percent of original size
     width = int(im_bckg.shape[1] * scale_fct)
     height = int(im_bckg.shape[1] * scale_fct / im_frg.shape[1] * im_frg.shape[0])
+    
+    upper_width_limit = 4000
+    if (width > upper_width_limit) or (height > upper_width_limit):
+        print("LIMIT")
+        width = upper_width_limit
+        height = int((upper_width_limit / im_bckg.shape[1]) * im_bckg.shape[0])
     dim = (width, height)
     # resize image
     im_frg = cv.resize(im_frg, dim, interpolation = cv.INTER_AREA)
