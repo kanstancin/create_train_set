@@ -26,9 +26,9 @@ infill = InfillAdder(inp_path_infill, inp_path_mask)
 spag = SpagAdder(inp_path_spag, inp_path_mask)
 for i, im_bckg_name in enumerate(im_names_bckgs):
     print("*"*30+"\n", i)
-    if (i < 1600): state = "/train"
+    if (i < 800): state = "/train"
     else: state = "/val"
-    if (i == 2000): break;
+    if (i == 1000): break;
     im_bckg = cv.imread(inp_path_printer + "/" + im_bckg_name, 1)
 
     im_bckg = cv.cvtColor(im_bckg, cv.COLOR_BGR2RGB)
