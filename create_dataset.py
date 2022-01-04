@@ -5,16 +5,16 @@ from add_infill import InfillAdder
 from dataset_gen import *
 
 # spag paths
-inp_path_spag = "/home/ubuntu/workspace/datasets/spag_blender_imgs_v2"
-# inp_path_spag = "/home/cstar/workspace/data/spag_blender_imgs"
+# inp_path_spag = "/home/ubuntu/workspace/datasets/spag_blender_imgs_v2"
+inp_path_spag = "/home/cstar/workspace/data/spag_blender_imgs"
 
 # infill paths
 inp_path_infill = "data/crop"
 
 # masks, printers, output path
 inp_path_mask = "data/mask/out"
-inp_path_printer = "/home/ubuntu/workspace/create_train_set/data/3d_printers"
-# inp_path_printer = "/home/cstar/workspace/data/bckg_imgs"
+# inp_path_printer = "/home/ubuntu/workspace/create_train_set/data/3d_printers"
+inp_path_printer = "/home/cstar/workspace/data/bckg_imgs"
 labels_path = "data/dataset_out/labels"
 imgs_path = "data/dataset_out/images"
 
@@ -51,9 +51,6 @@ for i, im_bckg_name in enumerate(im_names_bckgs):
     box = cv_box_to_yolo(box, mask.shape)
     # plt.imshow(im_bckg)
     # plt.show()
-    print("b shape ", im_bckg.shape)
-    plt.imshow(im_bckg)
-    plt.show()
     im_bckg = cv.cvtColor(im_bckg, cv.COLOR_RGB2BGR)
 
     # create grayscale
@@ -69,4 +66,6 @@ for i, im_bckg_name in enumerate(im_names_bckgs):
 
     labels_path_full = labels_path + state
     save_label(labels_path_full, im_out_name, box)
+    plt.imshow(im_bckg)
+    plt.show()
 

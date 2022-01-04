@@ -27,12 +27,12 @@ def apply_spag_transf(im_frg):
     im_frg = np.concatenate((im_frg,alpha_ch), axis=2)
 
     # do transforms
-    pc_aff = iaa.PiecewiseAffine(scale=(0.005, 0.013))
-    im_frg = pc_aff(image=im_frg)
-    pr_tf = iaa.PerspectiveTransform(scale=(0.03,0.15), keep_size=False)
-    im_frg = pr_tf(image=im_frg)
-    rotate = iaa.Affine(rotate=(-90, 90), scale=(1, 1), shear=(-50, 50))
-    im_frg = rotate(image=im_frg)
+    # pc_aff = iaa.PiecewiseAffine(scale=(0.005, 0.013))
+    # im_frg = pc_aff(image=im_frg)
+    # pr_tf = iaa.PerspectiveTransform(scale=(0.03,0.15), keep_size=False)
+    # im_frg = pr_tf(image=im_frg)
+    # rotate = iaa.Affine(rotate=(-90, 90), scale=(1, 1), shear=(-50, 50))
+    # im_frg = rotate(image=im_frg)
     return im_frg
 
 # spaghetti
