@@ -115,7 +115,7 @@ def resize_imgs(img, mask, shape):
 
 
 def resize_frg(im_frg, im_bckg):
-    scale_fct = random.uniform(0.1, 0.45)# 0.1  # percent of original size
+    scale_fct = random.uniform(0.2, 0.45)# 0.1  # percent of original size
     width = int(im_bckg.shape[1] * scale_fct)
     height = int(im_bckg.shape[1] * scale_fct / im_frg.shape[1] * im_frg.shape[0])
     dim = (width, height)

@@ -35,7 +35,8 @@ class SpagAdder():
 
         im_frg = crop_frg(im_frg)
         bckg_shape = im_bckg.shape
-        im_bckg = resize_bckg(im_frg, im_bckg)
+        # im_bckg = resize_bckg(im_frg, im_bckg)
+        im_frg = resize_frg(im_frg, im_bckg)
         print("shapes:", bckg_shape, im_bckg.shape, im_frg.shape)
         im_bckg, mask = overlay_img(im_frg, im_bckg)
         im_bckg, mask = resize_imgs(im_bckg, mask, bckg_shape)
