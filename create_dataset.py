@@ -63,7 +63,7 @@ for i, im_bckg_name in enumerate(im_names_bckgs):
 
     im_out_name = "img" + str(i) + ".jpg"
     imgs_path_full = imgs_path + state + "/" + im_out_name
-    # im_bckg = cv.GaussianBlur(im_bckg, (3, 3), cv.BORDER_DEFAULT)
+    im_bckg = cv.GaussianBlur(im_bckg, (3, 3), cv.BORDER_DEFAULT)
 
     cv.imwrite(imgs_path_full, im_bckg)
 
