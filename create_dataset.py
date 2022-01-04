@@ -34,10 +34,9 @@ for i, im_bckg_name in enumerate(im_names_bckgs):
     im_bckg = cv.cvtColor(im_bckg, cv.COLOR_BGR2RGB)
 
     # add infill
-    im_bckg = infill(im_bckg)
-
-    # add spag
     try:
+        im_bckg = infill(im_bckg)
+        # add spag
         im_bckg, mask = spag(im_bckg)
     except:
         print("\nERROR\n")
