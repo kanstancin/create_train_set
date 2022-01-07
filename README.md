@@ -5,6 +5,12 @@ bash configure_dirs.sh
 python create_dataset.py
 ```
 
+### download backgound imgs
+```bash
+# https://github.com/cvdfoundation/open-images-dataset#download-images-with-bounding-boxes-annotations
+aws s3 --no-sign-request sync s3://open-images-dataset/test
+```
+
 ### how to train YOLO
 ```bash
 python train.py --img 640 --batch 16 --epochs 30 --data ../create_train_set/yaml/dataset.yaml --weights yolov5s.pt
