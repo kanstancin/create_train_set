@@ -9,9 +9,7 @@ python create_dataset.py
 ```bash
 python train.py --img 640 --batch 16 --epochs 30 --data ../create_train_set/yaml/dataset.yaml --weights yolov5s.pt
 
-python train.py --img 608 --batch 64 --epochs 70 --data │
-../create_train_set/yaml/dataset.yaml --weights yolov5s.pt --freeze 17 --hyp ../create_train_set/yaml│
-/hyp.custom_v1.yaml
+python train.py --img 608 --batch 64 --epochs 70 --data ../create_train_set/yaml/dataset.yaml --weights yolov5s.pt --freeze 17 --hyp ../create_train_set/yaml/hyp.custom_v1.yaml
 ```
 
 ### how to predict

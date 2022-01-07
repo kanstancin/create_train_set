@@ -26,23 +26,23 @@ infill = InfillAdder(inp_path_infill, inp_path_mask)
 spag = SpagAdder(inp_path_spag, inp_path_mask)
 for i, im_bckg_name in enumerate(im_names_bckgs):
     print("*"*30+"\n", i)
-    if (i < 800): state = "/train"
+    if (i < 20000): state = "/train"
     else: state = "/val"
-    if (i == 1000): break;
-    im_bckg = cv.imread(inp_path_printer + "/" + im_bckg_name, 1)
+    if (i == 25000): break;
 
+    im_bckg = cv.imread(inp_path_printer + "/" + im_bckg_name, 1)
     im_bckg = cv.cvtColor(im_bckg, cv.COLOR_BGR2RGB)
 
     # add infill
     try:
-        im_bckg = infill(im_bckg)
+        # im_bckg = infill(im_bckg)
         # add spag
         im_bckg, mask = spag(im_bckg)
     except:
         print("\nERROR\n")
         continue
 
-    # im_bckg = cv.GaussianBlur(im_bckg, (5, 5), cv.BORDER_DEFAULT)
+    im_bckg = apply_image_transf(im_bckg)
 
     box = get_box_from_mask(mask)
     # try:
@@ -51,7 +51,6 @@ for i, im_bckg_name in enumerate(im_names_bckgs):
     box = cv_box_to_yolo(box, mask.shape)
     # plt.imshow(im_bckg)
     # plt.show()
-    im_bckg = cv.cvtColor(im_bckg, cv.COLOR_RGB2BGR)
 
     # create grayscale
     im_bckg = cv.cvtColor(im_bckg, cv.COLOR_RGB2GRAY)
@@ -60,7 +59,7 @@ for i, im_bckg_name in enumerate(im_names_bckgs):
 
     im_out_name = "img" + str(i) + ".jpg"
     imgs_path_full = imgs_path + state + "/" + im_out_name
-    im_bckg = cv.GaussianBlur(im_bckg, (3, 3), cv.BORDER_DEFAULT)
+    # im_bckg = cv.GaussianBlur(im_bckg, (3, 3), cv.BORDER_DEFAULT)
 
     cv.imwrite(imgs_path_full, im_bckg)
 

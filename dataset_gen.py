@@ -5,6 +5,20 @@ import numpy as np
 import os
 from imgaug import augmenters as iaa
 
+def apply_image_transf(img):
+    noise = iaa.Sometimes(0.5, iaa.AdditiveGaussianNoise(loc=0, scale=(0, 0.2 * 255), per_channel=0.5))
+    img = noise(image=img)
+    blur = iaa.Sometimes(0.5, iaa.GaussianBlur(0, 2))
+    img = blur(image=img)
+    CutOutGauss = iaa.Sometimes(0.3, iaa.Cutout(nb_iterations=(5,8), size=0.25, fill_mode="gaussian",
+                                                fill_per_channel=True))
+    img = CutOutGauss(image=img)
+    CutOutConst = iaa.Sometimes(0.2,
+                           iaa.Cutout(nb_iterations=(0, 3), size=0.20, fill_mode="constant", fill_per_channel=True,
+                                      squared=False))
+    img = CutOutConst(image=img)
+    return img
+
 def apply_infill_transf(im_frg):
     pc_aff = iaa.PiecewiseAffine(scale=(0.005, 0.013))
     im_frg = pc_aff(image=im_frg)
@@ -21,18 +35,18 @@ def apply_spag_transf(im_frg):
     # do transforms without alpha ch
     hue = iaa.AddToHue((-50, 50))
     im_frg = hue(image=im_frg)
-    bri = iaa.MultiplyAndAddToBrightness(mul=(0.9, 1.1), add=(-30, 30))
+    bri = iaa.MultiplyAndAddToBrightness(mul=(0.85, 1.15), add=(-30, 30))
     im_frg = bri(image=im_frg)
     # return alpha ch
     im_frg = np.concatenate((im_frg,alpha_ch), axis=2)
 
     # do transforms
-    # pc_aff = iaa.PiecewiseAffine(scale=(0.005, 0.013))
-    # im_frg = pc_aff(image=im_frg)
-    # pr_tf = iaa.PerspectiveTransform(scale=(0.03,0.15), keep_size=False)
-    # im_frg = pr_tf(image=im_frg)
-    # rotate = iaa.Affine(rotate=(-90, 90), scale=(1, 1), shear=(-50, 50))
-    # im_frg = rotate(image=im_frg)
+    pc_aff = iaa.Sometimes(0.2, iaa.PiecewiseAffine(scale=(0.005, 0.013)))
+    im_frg = pc_aff(image=im_frg)
+    pr_tf = iaa.Sometimes(0.2, iaa.PerspectiveTransform(scale=(0.03,0.15), keep_size=False))
+    im_frg = pr_tf(image=im_frg)
+    rotate = iaa.Sometimes(0.2, iaa.Affine(rotate=(-90, 90), scale=(1, 1), shear=(-50, 50)))
+    im_frg = rotate(image=im_frg)
     return im_frg
 
 # spaghetti
