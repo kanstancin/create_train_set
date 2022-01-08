@@ -26,7 +26,7 @@ infill = InfillAdder(inp_path_infill, inp_path_mask)
 spag = SpagAdder(inp_path_spag, inp_path_mask)
 for i, im_bckg_name in enumerate(im_names_bckgs):
     print("*"*30+"\n", i)
-    if (i < 16881): continue;
+    if (i < 21893): continue;
     if (i < 22500): state = "/train"
     else: state = "/val"
     if (i == 25000): break;
