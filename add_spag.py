@@ -30,6 +30,8 @@ class SpagAdder():
         im_mask = cv.imread(self.inp_path_mask + "/mask" + str(mask_num) + ".png", 0)
 
 
+        # Add color matching code here
+
         im_frg = apply_spag_transf(im_frg)
         # resize
 
