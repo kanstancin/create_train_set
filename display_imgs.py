@@ -6,9 +6,9 @@ import cv2
 from glob import glob
 from tqdm import tqdm
 
-files = glob("../blender_spag_generation/pictures/*") #"data/detection_out/*"
+files = glob("../create_train_set/data/images_sync/*") #"data/detection_out/*"
 for _ in range(1):
-    row = 3
+    row = 5
     col = 3
     grid_files = random.sample(files, row*col)
     images     = []
