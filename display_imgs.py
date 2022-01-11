@@ -8,7 +8,7 @@ from tqdm import tqdm
 
 files = glob("../create_train_set/data/images_sync/*") #"data/detection_out/*"
 for _ in range(1):
-    row = 5
+    row = 3
     col = 3
     grid_files = random.sample(files, row*col)
     images     = []
