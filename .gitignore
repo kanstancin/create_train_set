@@ -133,3 +133,4 @@ data/3d_printers/*
 data/dataset_out/*
 .idea/
 /data/dataset_out_2/
+/data/images_sync/
