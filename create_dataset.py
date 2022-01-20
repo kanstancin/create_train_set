@@ -1,11 +1,12 @@
 import random as rnd
 import matplotlib.pyplot as plt
+import traceback
 from add_spag import SpagAdder
 from add_infill import InfillAdder
 from dataset_gen import *
 
 # spag paths
-inp_path_spag = "/home/ubuntu/workspace/datasets/spag_blender_imgs_v2"
+inp_path_spag = "/home/cstar/workspace/blender_spag_generation/pictures_cropped"
 # inp_path_spag = "/home/cstar/workspace/data/spag_blender_imgs"
 
 # infill paths
@@ -13,7 +14,7 @@ inp_path_infill = "data/crop"
 
 # masks, printers, output path
 inp_path_mask = "data/mask/out"
-inp_path_printer = "/home/ubuntu/workspace/create_train_set/data/3d_printers"
+inp_path_printer = "/home/cstar/workspace/data/backgrounds"
 # inp_path_printer = "/home/cstar/workspace/data/bckg_imgs"
 labels_path = "data/dataset_out/labels"
 imgs_path = "data/dataset_out/images"
@@ -26,10 +27,10 @@ infill = InfillAdder(inp_path_infill, inp_path_mask)
 spag = SpagAdder(inp_path_spag, inp_path_mask)
 for i, im_bckg_name in enumerate(im_names_bckgs):
     print("*"*30+"\n", i)
-    if (i < 21893): continue;
-    if (i < 22500): state = "/train"
+    #if (i < 21893): continue;
+    if (i < 10000): state = "/train"
     else: state = "/val"
-    if (i == 25000): break;
+    if (i == 11000): break;
 
     im_bckg = cv.imread(inp_path_printer + "/" + im_bckg_name, 1)
     im_bckg = cv.cvtColor(im_bckg, cv.COLOR_BGR2RGB)
@@ -39,8 +40,9 @@ for i, im_bckg_name in enumerate(im_names_bckgs):
         # im_bckg = infill(im_bckg)
         # add spag
         im_bckg, mask = spag(im_bckg)
-    except:
+    except Exception:
         print("\nERROR\n")
+        traceback.print_exc()
         continue
 
     im_bckg = apply_image_transf(im_bckg)
@@ -66,6 +68,7 @@ for i, im_bckg_name in enumerate(im_names_bckgs):
 
     labels_path_full = labels_path + state
     save_label(labels_path_full, im_out_name, box)
+    '''
     plt.imshow(im_bckg)
     plt.show()
-
+    '''    

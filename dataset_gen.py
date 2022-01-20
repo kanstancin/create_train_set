@@ -34,15 +34,14 @@ def apply_infill_transf(im_frg):
 def color_match_transf(im_frg, im_bckg):
 
     # extract alpha channel
-    alpha_ch = im_frg[:, :, 3]
+    alpha_ch = im_frg[:, :, 3].reshape((-1, im_frg.shape[1], 1))
     # find dark and light colors in background image
     dark, light = get_dark_light(im_bckg)
     # range of pixel values that aren't transparent
-    min, max = bounding_box(alpha_ch)
     # final color correction
-    im_frg[min[0]:max[0], min[1]:max[1], :3] = color_correct(im_frg[min[0]:max[0], min[1]:max[1], :3], dark, light)
+    im_frg = color_correct(im_frg, dark, light)
 
-    return im_frg
+    return np.concatenate((im_frg, alpha_ch), axis=2)
 
 
 def apply_spag_transf(im_frg):
@@ -264,35 +263,11 @@ def get_dark_light(im_bkg):
     '''
     tmp = im_bkg
     im_bkg = cv.cvtColor(im_bkg, cv.COLOR_RGB2HSV)
-    bkg_shape = im_bkg.shape
 
-    dark_count = 0
-    light_count = 0
-
-    dark = [0., 0., 0.]
-    light = [0., 0., 0.]
-
-    print(f'bkg_height: {bkg_shape[0]}')
-    print(f'bkg_width: {bkg_shape[1]}')
-
-    for i in range(bkg_shape[0]):
-        for j in range(bkg_shape[1]):
-            if im_bkg[i, j, 2] < 0.2 * 255:
-                dark_count += 1
-                dark[0] += tmp[i, j, 0]
-                dark[1] += tmp[i, j, 1]
-                dark[2] += tmp[i, j, 2]
-            elif im_bkg[i, j, 2] > 0.8 * 255:
-                light_count += 1
-                light[0] += tmp[i, j, 0]
-                light[1] += tmp[i, j, 1]
-                light[2] += tmp[i, j, 2]
-
-    print(f'dark_count: {dark_count}')
-    print(f'light_count: {light_count}')
-    dark = [round(float(i) / dark_count) for i in dark]
-    light = [round(float(i) / light_count) for i in light]
-
+    dark = [np.mean(tmp[im_bkg[:, :, 2] < 0.2 * 255, ch]) for ch in range(3)]
+    light = [np.mean(tmp[im_bkg[:, :, 2] > 0.8 * 255, ch]) for ch in range(3)]
+    print(f'dark: {dark}')
+    print(f'light: {light}')
     return dark, light
 
 
@@ -305,28 +280,9 @@ def color_correct(im_frg, dark, light):
     :param light: light color to match to
     :return: color matched image
     '''
-    # extract only RGB channels, ignore alpha
-    im_frg = im_frg[:, :, :3]
+    coeffs = [np.polyfit((dark[ch], light[ch]), (0, 255), 1) for ch in range(3)]
 
-    M = np.zeros((256, 3), np.uint8)
-
-    for ch in range(3):
-        coeffs = np.polyfit((dark[0], light[0]), (0, 255), 1)
-        for idx in range(256):
-            if idx * coeffs[0] + coeffs[1] < 0:
-                M[idx, ch] = 0
-            elif idx * coeffs[0] + coeffs[1] > 255:
-                M[idx, ch] = 255
-            else:
-                M[idx, ch] = round(idx * coeffs[0] + coeffs[1])
-
-    h, w, ch = im_frg.shape
-    for i in range(h):
-        for j in range(w):
-            for k in range(ch):
-                im_frg[i, j, k] = M[im_frg[i, j, k], k]
-
-    return im_frg
+    return np.clip(np.array([im_frg[:, :, ch] * coeffs[ch][0] + coeffs[ch][1] for ch in range(3)]).transpose(1,2,0), 0, 255).astype("uint8")
 
 
 def bounding_box(alpha):
@@ -336,26 +292,10 @@ def bounding_box(alpha):
     :param alpha: the alpha channel of the image
     :return: the min and max pixel element
     '''
-    h, w = alpha.shape
 
-    min = [h, w]
-    max = [0, 0]
+    non_zero = alpha.nonzero()
+    i_min, i_max = [np.min(non_zero[0]), np.max(non_zero[0])]
+    j_min, j_max = [np.min(non_zero[1]), np.max(non_zero[1])]
+    
+    return alpha[i_min:i_max, j_min:j_max]
 
-    for i in range(h):
-        if np.any(alpha[i, :]):
-            min[0] = i
-            break
-    for i in reversed(range(h)):
-        if np.any(alpha[i, :]):
-            max[0] = i
-            break
-    for i in range(w):
-        if np.any(alpha[:, i]):
-            min[1] = i
-            break
-    for i in reversed(range(w)):
-        if np.any(alpha[:, i]):
-            max[1] = i
-            break
-
-    return min, max
