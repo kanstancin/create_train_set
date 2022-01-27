@@ -14,7 +14,7 @@ inp_path_infill = "data/crop"
 
 # masks, printers, output path
 inp_path_mask = "data/mask/out"
-inp_path_printer = "/home/cstar/workspace/data/backgrounds"
+inp_path_printer = "/home/cstar/workspace/data/architecture_and_3d-printers"
 # inp_path_printer = "/home/cstar/workspace/data/bckg_imgs"
 labels_path = "data/dataset_out/labels"
 imgs_path = "data/dataset_out/images"
@@ -23,21 +23,27 @@ imgs_path = "data/dataset_out/images"
 # aws s3 --no-sign-request sync s3://open-images-dataset/validation [target_dir/validation]
 # load printer img
 im_names_bckgs = get_img_paths(inp_path_printer)
+im_names_bckgs = [*im_names_bckgs, *im_names_bckgs, *im_names_bckgs]
 infill = InfillAdder(inp_path_infill, inp_path_mask)
 spag = SpagAdder(inp_path_spag, inp_path_mask)
 for i, im_bckg_name in enumerate(im_names_bckgs):
     print("*"*30+"\n", i)
     #if (i < 21893): continue;
-    if (i < 10000): state = "/train"
+    if (i < 9000): state = "/train"
     else: state = "/val"
-    if (i == 11000): break;
+    if (i == 12000): break;
 
-    im_bckg = cv.imread(inp_path_printer + "/" + im_bckg_name, 1)
-    im_bckg = cv.cvtColor(im_bckg, cv.COLOR_BGR2RGB)
+    try:
+        im_bckg = cv.imread(inp_path_printer + "/" + im_bckg_name, 1)
+        im_bckg = cv.cvtColor(im_bckg, cv.COLOR_BGR2RGB)
+    except Exception:
+        print("\ncv ERROR\n")
+        traceback.print_exc()
+        continue
 
     # add infill
     try:
-        # im_bckg = infill(im_bckg)
+        im_bckg = infill(im_bckg)
         # add spag
         im_bckg, mask = spag(im_bckg)
     except Exception:
@@ -71,4 +77,6 @@ for i, im_bckg_name in enumerate(im_names_bckgs):
     '''
     plt.imshow(im_bckg)
     plt.show()
-    '''    
+    '''
+
+

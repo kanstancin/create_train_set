@@ -133,3 +133,6 @@ data/3d_printers/*
 data/dataset_out/*
 .idea/
 /data/dataset_out_2/
+data/rgb_images_spag_&_bckg_proc/
+data/rgb_images_spag_&_bckg/
+data/

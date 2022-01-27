@@ -7,8 +7,8 @@ from dataset_gen import *
 from imgaug import augmenters as iaa
 
 
-path_inp = "data/spaghetti"
-path_out = "data/spaghetti_proc"
+path_inp = "data/rgb_images_spag_&_bckg"
+path_out = "data/rgb_images_spag_&_bckg_proc"
 im_names = get_img_paths(path_inp)
 for im_name in im_names:
     img = cv.imread(path_inp + "/" + im_name, 1)

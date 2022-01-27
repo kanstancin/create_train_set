@@ -7,14 +7,14 @@ from imgaug import augmenters as iaa
 
 
 def apply_image_transf(img):
-    noise = iaa.Sometimes(0.5, iaa.AdditiveGaussianNoise(loc=0, scale=(0, 0.2 * 255), per_channel=0.5))
+    noise = iaa.Sometimes(0.1, iaa.AdditiveGaussianNoise(loc=0, scale=(0, 0.05 * 255), per_channel=0.5))
     img = noise(image=img)
-    blur = iaa.Sometimes(0.5, iaa.GaussianBlur(0, 2))
+    blur = iaa.Sometimes(0.1, iaa.GaussianBlur(0, 2))
     img = blur(image=img)
-    CutOutGauss = iaa.Sometimes(0.3, iaa.Cutout(nb_iterations=(5, 8), size=0.25, fill_mode="gaussian",
+    CutOutGauss = iaa.Sometimes(0.1, iaa.Cutout(nb_iterations=(1, 4), size=0.10, fill_mode="gaussian",
                                                 fill_per_channel=True))
     img = CutOutGauss(image=img)
-    CutOutConst = iaa.Sometimes(0.2,
+    CutOutConst = iaa.Sometimes(0.1,
                                 iaa.Cutout(nb_iterations=(0, 3), size=0.20, fill_mode="constant", fill_per_channel=True,
                                            squared=False))
     img = CutOutConst(image=img)
@@ -26,7 +26,7 @@ def apply_infill_transf(im_frg):
     im_frg = pc_aff(image=im_frg)
     pr_tf = iaa.PerspectiveTransform(scale=(0.03, 0.15), keep_size=False)
     im_frg = pr_tf(image=im_frg)
-    rotate = iaa.Affine(rotate=(-90, 90), scale=(1, 1), shear=(-50, 50))
+    rotate = iaa.Affine(rotate=(-90, 90), scale=(1, 1), shear=(-5, 5))
     im_frg = rotate(image=im_frg)
     return im_frg
 
@@ -55,11 +55,28 @@ def apply_spag_transf(im_frg):
     im_frg = np.concatenate((im_frg, alpha_ch), axis=2)
 
     # do transforms
-    pc_aff = iaa.Sometimes(0.2, iaa.PiecewiseAffine(scale=(0.005, 0.013)))
+    pc_aff = iaa.Sometimes(0.1, iaa.PiecewiseAffine(scale=(0.005, 0.033))) #scale=(0.005, 0.023)
     im_frg = pc_aff(image=im_frg)
-    pr_tf = iaa.Sometimes(0.2, iaa.PerspectiveTransform(scale=(0.03, 0.15), keep_size=False))
+    pr_tf = iaa.Sometimes(0.1, iaa.PerspectiveTransform(scale=(0.03, 0.35), keep_size=False)) #scale=(0.03, 0.15)
     im_frg = pr_tf(image=im_frg)
-    rotate = iaa.Sometimes(0.2, iaa.Affine(rotate=(-90, 90), scale=(1, 1), shear=(-50, 50)))
+    rotate = iaa.Sometimes(0.1, iaa.Affine(rotate=(-90, 90), scale=(1, 1), shear=(-15, 15)))
+    im_frg = rotate(image=im_frg)
+    return im_frg
+
+
+# background
+def apply_bckg_transf(im_frg):
+    # extrack alpha ch
+    # do transforms without alpha ch
+    hue = iaa.AddToHue((-10, 10))
+    im_frg = hue(image=im_frg)
+
+    # do transforms
+    pc_aff = iaa.Sometimes(0.05, iaa.PiecewiseAffine(scale=(0.005, 0.01))) #scale=(0.005, 0.023)
+    im_frg = pc_aff(image=im_frg)
+    pr_tf = iaa.Sometimes(0.05, iaa.PerspectiveTransform(scale=(0.01, 0.1), keep_size=False)) #scale=(0.03, 0.15)
+    im_frg = pr_tf(image=im_frg)
+    rotate = iaa.Sometimes(0.05, iaa.Affine(rotate=(-90, 90), scale=(1, 1), shear=(-15, 15), mode="reflect"))
     im_frg = rotate(image=im_frg)
     return im_frg
 
