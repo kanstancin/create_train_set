@@ -26,7 +26,7 @@ def apply_infill_transf(im_frg):
     im_frg = pc_aff(image=im_frg)
     pr_tf = iaa.PerspectiveTransform(scale=(0.03, 0.15), keep_size=False)
     im_frg = pr_tf(image=im_frg)
-    rotate = iaa.Affine(rotate=(-90, 90), scale=(1, 1), shear=(-5, 5))
+    rotate = iaa.Affine(rotate=(-5, 5), scale=(1, 1), shear=(-1, 1))
     im_frg = rotate(image=im_frg)
     return im_frg
 

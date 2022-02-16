@@ -6,11 +6,11 @@ from add_infill import InfillAdder
 from dataset_gen import *
 
 # spag paths
-inp_path_spag = "/home/cstar/workspace/blender_spag_generation/pictures_cropped"
+inp_path_spag = "/home/cstar/workspace/data/spag_upd/united_crop"
 # inp_path_spag = "/home/cstar/workspace/data/spag_blender_imgs"
 
 # infill paths
-inp_path_infill = "data/crop"
+inp_path_infill = "/home/cstar/workspace/blender_printed_model/pictures_cropped"
 
 # masks, printers, output path
 inp_path_mask = "data/mask/out"
@@ -18,7 +18,7 @@ inp_path_printer = "/home/cstar/workspace/data/architecture_and_3d-printers"
 # inp_path_printer = "/home/cstar/workspace/data/bckg_imgs"
 labels_path = "data/dataset_out/labels"
 imgs_path = "data/dataset_out/images"
-
+masks_path = "data/dataset_out/masks"
 # download dataset:
 # aws s3 --no-sign-request sync s3://open-images-dataset/validation [target_dir/validation]
 # load printer img
@@ -29,9 +29,9 @@ spag = SpagAdder(inp_path_spag, inp_path_mask)
 for i, im_bckg_name in enumerate(im_names_bckgs):
     print("*"*30+"\n", i)
     #if (i < 21893): continue;
-    if (i < 9000): state = "/train"
+    if (i < 8000): state = "/train"
     else: state = "/val"
-    if (i == 12000): break;
+    if (i == 10000): break;
 
     try:
         im_bckg = cv.imread(inp_path_printer + "/" + im_bckg_name, 1)
@@ -71,12 +71,14 @@ for i, im_bckg_name in enumerate(im_names_bckgs):
     # im_bckg = cv.GaussianBlur(im_bckg, (3, 3), cv.BORDER_DEFAULT)
 
     cv.imwrite(imgs_path_full, im_bckg)
+    mask_path_full = f"{masks_path}{state}/mask{i}.jpg"
+    cv.imwrite(mask_path_full, mask)
 
     labels_path_full = labels_path + state
     save_label(labels_path_full, im_out_name, box)
-    '''
-    plt.imshow(im_bckg)
-    plt.show()
-    '''
+
+    # plt.imshow(im_bckg)
+    # plt.show()
+
 
 
