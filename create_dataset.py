@@ -5,8 +5,8 @@ from add_infill import InfillAdder
 from dataset_gen import *
 
 # spag paths
-inp_path_spag = "/home/ubuntu/workspace/datasets/spag_blender_imgs_v2"
-# inp_path_spag = "/home/cstar/workspace/data/spag_blender_imgs"
+# inp_path_spag = "/home/ubuntu/workspace/datasets/spag_blender_imgs_v2"
+inp_path_spag = "/home/cstar/workspace/data/spag_blender_imgs"
 
 # infill paths
 inp_path_infill = "data/crop"
@@ -14,9 +14,10 @@ inp_path_infill = "data/crop"
 # masks, printers, output path
 inp_path_mask = "data/mask/out"
 inp_path_printer = "/home/ubuntu/workspace/create_train_set/data/3d_printers"
+inp_path_printer = "/home/cstar/workspace/grid-data/im-test-no-shadow"
 # inp_path_printer = "/home/cstar/workspace/data/bckg_imgs"
-labels_path = "data/dataset_out/labels"
-imgs_path = "data/dataset_out/images"
+labels_path = "data/dataset_out_3/labels"
+imgs_path = "data/dataset_out_3/images"
 
 # download dataset:
 # aws s3 --no-sign-request sync s3://open-images-dataset/validation [target_dir/validation]
@@ -43,7 +44,7 @@ for i, im_bckg_name in enumerate(im_names_bckgs):
         print("\nERROR\n")
         continue
 
-    im_bckg = apply_image_transf(im_bckg)
+    # im_bckg = apply_image_transf(im_bckg)
 
     box = get_box_from_mask(mask)
     # try:
@@ -54,11 +55,12 @@ for i, im_bckg_name in enumerate(im_names_bckgs):
     # plt.show()
 
     # create grayscale
-    im_bckg = cv.cvtColor(im_bckg, cv.COLOR_RGB2GRAY)
-    im_bckg = [im_bckg,im_bckg,im_bckg]
-    im_bckg = np.transpose(im_bckg,(1,2,0))
+    # im_bckg = cv.cvtColor(im_bckg, cv.COLOR_RGB2GRAY)
+    # im_bckg = [im_bckg,im_bckg,im_bckg]
+    # im_bckg = np.transpose(im_bckg,(1,2,0))
 
     im_out_name = "img" + str(i) + ".jpg"
+    im_out_name = im_bckg_name
     imgs_path_full = imgs_path + state + "/" + im_out_name
     # im_bckg = cv.GaussianBlur(im_bckg, (3, 3), cv.BORDER_DEFAULT)
 
