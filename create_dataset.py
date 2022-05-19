@@ -13,11 +13,12 @@ inp_path_infill = "data/crop"
 
 # masks, printers, output path
 inp_path_mask = "data/mask/out"
-inp_path_printer = "/home/ubuntu/workspace/create_train_set/data/3d_printers"
-inp_path_printer = "/home/cstar/workspace/grid-data/im-test-no-shadow"
+# inp_path_printer = "/home/ubuntu/workspace/create_train_set/data/3d_printers"
+inp_path_printer = "/home/cstar/workspace/grid-data/dataset-im-diff-no-shadows-Z30-avg-3"
 # inp_path_printer = "/home/cstar/workspace/data/bckg_imgs"
 labels_path = "data/dataset_out_3/labels"
 imgs_path = "data/dataset_out_3/images"
+masks_path = "data/dataset_out_3/masks"
 
 # download dataset:
 # aws s3 --no-sign-request sync s3://open-images-dataset/validation [target_dir/validation]
@@ -27,10 +28,7 @@ infill = InfillAdder(inp_path_infill, inp_path_mask)
 spag = SpagAdder(inp_path_spag, inp_path_mask)
 for i, im_bckg_name in enumerate(im_names_bckgs):
     print("*"*30+"\n", i)
-    if (i < 21893): continue;
-    if (i < 22500): state = "/train"
-    else: state = "/val"
-    if (i == 25000): break;
+    state = "/train"
 
     im_bckg = cv.imread(inp_path_printer + "/" + im_bckg_name, 1)
     im_bckg = cv.cvtColor(im_bckg, cv.COLOR_BGR2RGB)
@@ -40,8 +38,8 @@ for i, im_bckg_name in enumerate(im_names_bckgs):
         # im_bckg = infill(im_bckg)
         # add spag
         im_bckg, mask = spag(im_bckg)
-    except:
-        print("\nERROR\n")
+    except Exception as e:
+        print("\nERROR\n", e)
         continue
 
     # im_bckg = apply_image_transf(im_bckg)
@@ -59,15 +57,17 @@ for i, im_bckg_name in enumerate(im_names_bckgs):
     # im_bckg = [im_bckg,im_bckg,im_bckg]
     # im_bckg = np.transpose(im_bckg,(1,2,0))
 
-    im_out_name = "img" + str(i) + ".jpg"
     im_out_name = im_bckg_name
     imgs_path_full = imgs_path + state + "/" + im_out_name
     # im_bckg = cv.GaussianBlur(im_bckg, (3, 3), cv.BORDER_DEFAULT)
-
+    im_bckg = cv.cvtColor(im_bckg, cv.COLOR_RGB2BGR)
     cv.imwrite(imgs_path_full, im_bckg)
+
+    mask_path_full = f"{masks_path}{state}/mask{im_out_name}"
+    cv.imwrite(mask_path_full, mask)
 
     labels_path_full = labels_path + state
     save_label(labels_path_full, im_out_name, box)
-    plt.imshow(im_bckg)
-    plt.show()
+    # plt.imshow(im_bckg)
+    # plt.show()
 

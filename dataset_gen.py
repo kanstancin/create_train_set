@@ -86,6 +86,18 @@ def remove_bckg(img_orig):
     hsv[labels!=bcg_center_arg,:] = [0,0,0]
     return img_orig
 
+
+def adjust_gamma(image, gamma=1.0):
+    # build a lookup table mapping the pixel values [0, 255] to
+    # their adjusted gamma values
+    invGamma = 1.0 / gamma
+    table = np.array([((i / 255.0) ** invGamma) * 255 for i in np.arange(0, 256)])
+    # apply gamma correction using the lookup table
+    image = image.astype(np.uint8)
+    image = cv.LUT(image, table).astype(np.float32)
+    return image
+
+
 def overlay_img(im_frg, im_bckg):
     # if im_frg.shape[0] > im_bckg.shape[0]:
     #     im_frg = im_frg[:im_bckg.shape[0], :]
@@ -104,9 +116,13 @@ def overlay_img(im_frg, im_bckg):
                 overlay_coord[1]:overlay_coord[1] + frg_width] = im_frg[:, :, :]
     # create mask
     alpha_mask = im_frg_full[:, :, 3]
-    alpha_mask[alpha_mask > 190] = alpha_mask[alpha_mask > 190] * 2
+    print("alp", alpha_mask.dtype)
+    import matplotlib.pyplot as plt
+    # alpha_mask[alpha_mask > 190] = alpha_mask[alpha_mask > 190] * 2
+    alpha_mask = adjust_gamma(alpha_mask, gamma=0.8)
     alpha_mask = alpha_mask / np.max(alpha_mask)
     alpha_mask = np.array([alpha_mask, alpha_mask, alpha_mask]).transpose(1, 2, 0)
+
     # display for debug
     # import matplotlib.pyplot as plt
     # plt.imshow(alpha_mask)
@@ -116,7 +132,9 @@ def overlay_img(im_frg, im_bckg):
     # overlay images
     im_bckg = (im_bckg * (1 - alpha_mask) + im_frg_full[:, :, :3] * alpha_mask).astype("uint8")
     # covert mask to binary format
-    alpha_mask = (alpha_mask[:, :, 0] > 0.1) * 255
+    alpha_mask = (alpha_mask[:, :, 0] > 0.25) * 255
+    # plt.imshow(alpha_mask, cmap='gray')
+    # plt.show()
     alpha_mask = alpha_mask.astype("uint8")
     return im_bckg, alpha_mask
 
@@ -129,7 +147,7 @@ def resize_imgs(img, mask, shape):
 
 
 def resize_frg(im_frg, im_bckg):
-    scale_fct = random.uniform(0.2, 0.45)# 0.1  # percent of original size
+    scale_fct = random.uniform(0.09, 0.2)# 0.1  # percent of original size
     width = int(im_bckg.shape[1] * scale_fct)
     height = int(im_bckg.shape[1] * scale_fct / im_frg.shape[1] * im_frg.shape[0])
     dim = (width, height)
@@ -168,7 +186,7 @@ def crop_frg(im):
 
 # mask processing
 def is_inp(img_name):
-    return img_name.endswith(("jpg","jpeg","png"))
+    return img_name.endswith(("jpg", "jpeg", "png"))
 
 def get_img_paths(im_in_dir, verbose=True):
     all_inps = os.listdir(im_in_dir)
