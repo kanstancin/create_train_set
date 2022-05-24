@@ -1,3 +1,4 @@
+import os.path
 import random as rnd
 import matplotlib.pyplot as plt
 from add_spag import SpagAdder
@@ -14,11 +15,19 @@ inp_path_infill = "data/crop"
 # masks, printers, output path
 inp_path_mask = "data/mask/out"
 # inp_path_printer = "/home/ubuntu/workspace/create_train_set/data/3d_printers"
-inp_path_printer = "/home/cstar/workspace/grid-data/dataset-im-diff-no-shadows-Z30-avg-3"
+raw_data_dir = 'dataset-G10-Z130-D500-0/'  #
+raw_data_path = '/home/cstar/workspace/grid-data/preproc_data/'  #
+inp_path_printer = os.path.join(raw_data_path, raw_data_dir, f'dataset-im-diff-avg-{3}')
 # inp_path_printer = "/home/cstar/workspace/data/bckg_imgs"
-labels_path = "data/dataset_out_3/labels"
-imgs_path = "data/dataset_out_3/images"
-masks_path = "data/dataset_out_3/masks"
+out_path = os.path.join(raw_data_path, raw_data_dir, f'dataset-im-diff-spag-avg-{3}')
+# if not os.path.exists(out_path):
+os.makedirs(out_path, exist_ok=True)
+os.makedirs(os.path.join(out_path, 'images/train'), exist_ok=True)
+os.makedirs(os.path.join(out_path, 'labels/train'), exist_ok=True)
+os.makedirs(os.path.join(out_path, 'masks/train'), exist_ok=True)
+labels_path = os.path.join(out_path, 'labels')
+imgs_path = os.path.join(out_path, 'images')
+masks_path = os.path.join(out_path, 'masks')
 
 # download dataset:
 # aws s3 --no-sign-request sync s3://open-images-dataset/validation [target_dir/validation]

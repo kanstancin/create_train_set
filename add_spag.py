@@ -10,6 +10,7 @@ class SpagAdder():
         self.inp_path_frg = inp_path_frg
         self.inp_path_mask = inp_path_mask
         self.im_names_frgs = get_img_paths(inp_path_frg)
+        np.random.shuffle(self.im_names_frgs)
         self.im_names_masks = get_img_paths(inp_path_mask)
 
         self.count_frgs = -1
